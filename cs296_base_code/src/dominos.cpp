@@ -51,44 +51,14 @@ namespace cs296
       b1 = m_world->CreateBody(&bd);
       b1->CreateFixture(&shape, 0.0f);
     }
-
-//The revolving vertical platform
-    {
-      b2PolygonShape shape;
-      shape.SetAsBox(0.2f, 4.4f);
-	
-      b2BodyDef bd;
-      bd.position.Set(-38.0f, 35.0f);
-      bd.type = b2_dynamicBody;
-      b2Body* body3 = m_world->CreateBody(&bd);
-      b2FixtureDef *fd = new b2FixtureDef;
-      fd->density = 2.0f;
-      fd->shape = new b2PolygonShape;
-      fd->shape = &shape;
-      body3->CreateFixture(fd);
-
-      b2PolygonShape shape3;
-      shape3.SetAsBox(2.0f, 0.2f);
-      b2BodyDef bd4;
-      bd4.position.Set(-38.0f, 28.0f);
-      b2Body* body = m_world->CreateBody(&bd4);
-
-      b2RevoluteJointDef jointDef;
-      jointDef.bodyA = body;
-      jointDef.bodyB = body3;
-      jointDef.localAnchorA.Set(0,-4);
-      jointDef.localAnchorB.Set(0,-4);
-      jointDef.collideConnected = false;
-      m_world->CreateJoint(&jointDef);
-    }
       
     //Top horizontal shelf
     {
       b2PolygonShape shape;
-      shape.SetAsBox(6.0f, 0.25f);
+      shape.SetAsBox(10.0f, 0.25f);
 	
       b2BodyDef bd;
-      bd.position.Set(-31.0f, 30.0f);
+      bd.position.Set(-20.0f, 35.0f);
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
     }
@@ -96,36 +66,130 @@ namespace cs296
     //Dominos
     {
       b2PolygonShape shape;
-      shape.SetAsBox(0.1f, 1.0f);
+      shape.SetAsBox(0.1f, 1.70f);
 	
       b2FixtureDef fd;
       fd.shape = &shape;
-      fd.density = 1.0f;
+      fd.density = 20.0f;
       fd.friction = 0.1f;
 		
-      for (int i = 0; i < 10; ++i)
+      for (int i = 0; i < 14; ++i)
 	{
 	  b2BodyDef bd;
 	  bd.type = b2_dynamicBody;
-	  bd.position.Set(-35.5f + 1.0f * i, 31.25f);
+	  bd.position.Set(-24.5f + 1.0f * i, 36.25f);
 	  b2Body* body = m_world->CreateBody(&bd);
 	  body->CreateFixture(&fd);
 	}
-    }
-      
-    //Another horizontal shelf
+    
+    
+    
+    //ravi Top horizontal shelf
+    b2Body* ground;
     {
       b2PolygonShape shape;
-      shape.SetAsBox(5.0f, 0.25f, b2Vec2(-20.f,20.f), 0.0f);
+      shape.SetAsBox(14.0f, 0.25f);
 	
       b2BodyDef bd;
-      bd.position.Set(-15.0f, -5.4f);
-      b2Body* ground = m_world->CreateBody(&bd);
+      bd.position.Set(-21.0f, 27.0f);
+      ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
     }
 
+//on second shelves    
+    b2Body* dominos2;
+    {
+      b2PolygonShape shape2;
+      shape2.SetAsBox(0.1f, 1.70f);
+	
+      b2FixtureDef fd2;
+      fd2.shape = &shape2;
+      fd2.density = 20.0f;
+      fd2.friction = 0.1f;
+		
+      for (int i = 1; i < 23; ++i)
+	{
+	  b2BodyDef bd2;
+	  bd2.type = b2_dynamicBody;
+	  bd2.position.Set(-33.65f + 1.0f * i, 28.25f);
+	  dominos2 = m_world->CreateBody(&bd2);
+	  dominos2->CreateFixture(&fd2);
+	}
+	
+   }
+			
+	  //for rotating half dumble
+	  b2Body* sbodydom; 
+	 {    
+	  b2PolygonShape shape2;
+      shape2.SetAsBox(0.2f, 2.50f);
+	
+      b2FixtureDef fd2;
+      fd2.shape = &shape2;
+      fd2.density = 18.0f;
+      fd2.friction = 0.1f;
+		
+		b2BodyDef bd2;
+	  bd2.type = b2_dynamicBody;
+	  bd2.position.Set(-33.65f , 28.23f);
+	  sbodydom = m_world->CreateBody(&bd2);
+	  sbodydom->CreateFixture(&fd2);
+	 }
+
+	
+    // sphere of dumble
+   
+      b2Body* sbody;
+   {
+      b2CircleShape circle;
+      circle.m_radius = 1.0;
+	
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 10.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+      b2BodyDef ballbd;
+      ballbd.type = b2_dynamicBody;
+      ballbd.position.Set(-33.72f, 30.50f);
+      sbody = m_world->CreateBody(&ballbd);
+      sbody->CreateFixture(&ballfd);
+    }
+	 
+	  b2RevoluteJointDef jd;
+      b2Vec2 anchor;
+      anchor.Set(-33.72f, 30.50f);
+      jd.Initialize(sbody, sbodydom, anchor);
+      m_world->CreateJoint(&jd);
+      
+      
+   
+		//joining of dominp with ground
+	/*
+	b2RevoluteJointDef jd1;
+      b2Vec2 anchor1;
+      anchor.Set(-33.65f, 28.0f);
+      jd1.Initialize(sbodydom, ground, anchor1);
+      m_world->CreateJoint(&jd1);
+    
+	*/
+	}  
+      
+      
+    //Another horizontal shelf
+   /* {
+      b2PolygonShape shape;
+      shape.SetAsBox(17.0f, 0.25f, b2Vec2(-20.f,20.f), 0.0f);
+	
+      b2BodyDef bd;
+      bd.position.Set(1.0f, 6.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+*/
 
     //The pendulum that knocks the dominos off
+    
     {
       b2Body* b2;
       {
@@ -133,7 +197,7 @@ namespace cs296
 	shape.SetAsBox(0.25f, 1.5f);
 	  
 	b2BodyDef bd;
-	bd.position.Set(-24.05f, 28.0f);
+	bd.position.Set(-27.5f, 35.0f);
 	b2 = m_world->CreateBody(&bd);
 	b2->CreateFixture(&shape, 10.0f);
       }
@@ -145,19 +209,23 @@ namespace cs296
 	  
 	b2BodyDef bd;
 	bd.type = b2_dynamicBody;
-	bd.position.Set(-27.55f, 33.0f);
+	bd.position.Set(-27.0f, 40.0f);
 	b4 = m_world->CreateBody(&bd);
 	b4->CreateFixture(&shape, 2.0f);
       }
 	
       b2RevoluteJointDef jd;
       b2Vec2 anchor;
-      anchor.Set(-24.55f, 40.0f);
+      anchor.Set(-20.0f, 45.0f);
       jd.Initialize(b2, b4, anchor);
       m_world->CreateJoint(&jd);
     }
+    
+    //sravi
+    
       
     //The train of small spheres
+    /*
     {
       b2Body* spherebody;
 	
@@ -170,16 +238,21 @@ namespace cs296
       ballfd.friction = 0.0f;
       ballfd.restitution = 0.0f;
 	
-      for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 10; ++i)
 	{
 	  b2BodyDef ballbd;
 	  ballbd.type = b2_dynamicBody;
-	  ballbd.position.Set(-36.2f + i*1.0, 20.0f);
+	  ballbd.position.Set(-22.2f + i*1.0, 26.6f);
 	  spherebody = m_world->CreateBody(&ballbd);
 	  spherebody->CreateFixture(&ballfd);
 	}
     }
+    
+    sravi
+    */
 
+
+/*
     //The pulley system
     {
       b2BodyDef *bd = new b2BodyDef;
@@ -235,25 +308,30 @@ namespace cs296
       m_world->CreateJoint(myjoint);
     }
 
-    //The revolving horizontal platform
+*/
+
+
+
+
+    // sravi The revolving horizontal platform
     {
       b2PolygonShape shape;
-      shape.SetAsBox(2.2f, 0.2f);
+      shape.SetAsBox(0.3f, 5.8f);
 	
       b2BodyDef bd;
-      bd.position.Set(14.0f, 28.0f);
+      bd.position.Set(-8.30f, 34.0f);
       bd.type = b2_dynamicBody;
       b2Body* body = m_world->CreateBody(&bd);
       b2FixtureDef *fd = new b2FixtureDef;
-      fd->density = 2.0f;
+      fd->density = 1.f;
       fd->shape = new b2PolygonShape;
       fd->shape = &shape;
       body->CreateFixture(fd);
 
       b2PolygonShape shape2;
-      shape2.SetAsBox(0.2f, 2.0f);
+      shape2.SetAsBox(0.3f, 5.80f);
       b2BodyDef bd2;
-      bd2.position.Set(-22.0f, 31.0f);
+      bd2.position.Set(-8.30f, 34.0f);
       b2Body* body2 = m_world->CreateBody(&bd2);
 
       b2RevoluteJointDef jointDef;
@@ -263,10 +341,11 @@ namespace cs296
       jointDef.localAnchorB.Set(0,0);
       jointDef.collideConnected = false;
       m_world->CreateJoint(&jointDef);
+    
     }
 
     //The heavy sphere on the platform
-    {
+ /*   {
       b2Body* sbody;
       b2CircleShape circle;
       circle.m_radius = 1.0;
@@ -278,11 +357,11 @@ namespace cs296
       ballfd.restitution = 0.0f;
       b2BodyDef ballbd;
       ballbd.type = b2_dynamicBody;
-      ballbd.position.Set(-22.0f, 33.0f);
+      ballbd.position.Set(14.0f, 18.0f);
       sbody = m_world->CreateBody(&ballbd);
       sbody->CreateFixture(&ballfd);
     }
-
+*/
 
     //The see-saw system at the bottom
     {
