@@ -41,7 +41,7 @@ namespace cs296
 {
   dominos_t::dominos_t()
   {
-    //Ground
+    //Ground (b1)  > lower most horigental line
     b2Body* b1;
     {
       b2EdgeShape shape;
@@ -118,8 +118,9 @@ namespace cs296
 	
    }
 			
+		
 	  //for rotating half dumble
-	  b2Body* sbodydom; 
+	   b2Body* sbodydom; 
 	 {    
 	  b2PolygonShape shape2;
       shape2.SetAsBox(0.2f, 2.50f);
@@ -135,6 +136,8 @@ namespace cs296
 	  sbodydom = m_world->CreateBody(&bd2);
 	  sbodydom->CreateFixture(&fd2);
 	 }
+	
+	 
 
 	
     // sphere of dumble
@@ -156,12 +159,14 @@ namespace cs296
       sbody->CreateFixture(&ballfd);
     }
 	 
+	 
+	  
 	  b2RevoluteJointDef jd;
       b2Vec2 anchor;
       anchor.Set(-33.72f, 30.50f);
       jd.Initialize(sbody, sbodydom, anchor);
-      m_world->CreateJoint(&jd);
-      
+	  m_world->CreateJoint(&jd);
+  
       
    
 		//joining of dominp with ground
@@ -173,7 +178,169 @@ namespace cs296
       m_world->CreateJoint(&jd1);
     
 	*/
+	
+	{
+      b2PolygonShape shape;
+      shape.SetAsBox(0.3f, 5.8f);
+	
+      b2BodyDef bd;
+      bd.position.Set(-8.30f, 34.0f);
+      bd.type = b2_dynamicBody;
+      b2Body* body = m_world->CreateBody(&bd);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 1.f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+
+      b2PolygonShape shape2;
+      shape2.SetAsBox(0.3f, 5.80f);
+      b2BodyDef bd2;
+      bd2.position.Set(-8.30f, 34.0f);
+      b2Body* body2 = m_world->CreateBody(&bd2);
+
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = body;
+      jointDef.bodyB = body2;
+      jointDef.localAnchorA.Set(0,0);
+      jointDef.localAnchorB.Set(0,0);
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+    
+    }
+	
+		
+	
+		
 	}  
+//////////////////////////////////////////
+//left rorater domble
+{	
+      b2PolygonShape shape;
+      shape.SetAsBox(0.3f, 5.8f);
+	
+		
+		b2BodyDef bd;
+		bd.position.Set(-37.30f , 27.0f);
+		bd.type = b2_dynamicBody;
+		b2Body* sbodydom1 = m_world->CreateBody(&bd);
+		b2FixtureDef *fd = new b2FixtureDef;
+		fd->density = 2.f;
+		fd->shape = new b2PolygonShape;
+		fd->shape = &shape;
+		sbodydom1->CreateFixture(fd);
+    
+    
+    
+		b2PolygonShape shape2;
+		shape2.SetAsBox(0.3f, 5.80f);
+		b2BodyDef bd2;
+		bd2.position.Set(-37.30f , 27.0f);
+		b2Body* sbodydom2 = m_world->CreateBody(&bd2);
+	
+		b2RevoluteJointDef jointDef;
+		jointDef.bodyA = sbodydom1;
+		jointDef.bodyB = sbodydom2;
+		jointDef.localAnchorA.Set(0,0);
+		jointDef.localAnchorB.Set(0,0);
+		jointDef.collideConnected = false;
+		m_world->CreateJoint(&jointDef);
+	    
+     }
+
+
+///////////////////////////////////////////////
+	//lower  hanging domble 
+	
+	{	
+      b2PolygonShape shape;
+      shape.SetAsBox(0.3f, 3.8f);
+	
+		for (int i = 0; i < 4; ++i)
+		{
+		b2BodyDef bd;
+		bd.position.Set(-34.30f + 2.0f * i, 26.0f);
+		bd.type = b2_dynamicBody;
+		b2Body* sbodydom1 = m_world->CreateBody(&bd);
+		b2FixtureDef *fd = new b2FixtureDef;
+		fd->density = 1.f;
+		fd->shape = new b2PolygonShape;
+		fd->shape = &shape;
+		sbodydom1->CreateFixture(fd);
+    
+    
+    
+		b2PolygonShape shape2;
+		shape2.SetAsBox(0.3f, 3.80f);
+		b2BodyDef bd2;
+		bd2.position.Set(-34.30f + 2.0f * i, 26.0f);
+		b2Body* sbodydom2 = m_world->CreateBody(&bd2);
+	
+		b2RevoluteJointDef jointDef;
+		jointDef.bodyA = sbodydom1;
+		jointDef.bodyB = sbodydom2;
+		jointDef.localAnchorA.Set(0,3.80);
+		jointDef.localAnchorB.Set(0,0);
+		jointDef.collideConnected = false;
+		m_world->CreateJoint(&jointDef);
+	    }
+     }  
+/////////////////////////////
+//3 slab for initiation of boll && boll
+
+	{
+      b2PolygonShape shape;
+      shape.SetAsBox(10.0f, 0.25f);
+	
+      b2BodyDef bd;
+      bd.position.Set(-14.0f, 18.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+    
+        b2Body* sbody;
+   {
+      b2CircleShape circle;
+      circle.m_radius = 1.70;
+	
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 1.0f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+      b2BodyDef ballbd;
+      ballbd.type = b2_dynamicBody;
+      ballbd.position.Set(-22.0f, 18.30f);
+      sbody = m_world->CreateBody(&ballbd);
+      sbody->CreateFixture(&ballfd);
+    }
+	  
+     
+ ///////////////////////    
+	 /* b2PolygonShape shape22;
+      shape22.SetAsBox(0.2f, 2.50f);
+      b2BodyDef bd3;
+      bd3.position.Set(-33.65f, 28.23f);
+      b2Body* body21 = m_world->CreateBody(&bd3);
+ */
+      /*
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = sbodydom;
+      jointDef.bodyB = body21;
+      jointDef.localAnchorA.Set(0,-2.5);
+      jointDef.localAnchorB.Set(0,-1.0);
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+	 */
+	
+
+
+
+
+
+/////////////////////////////////////
+
+
       
       
     //Another horizontal shelf
@@ -252,12 +419,12 @@ namespace cs296
     */
 
 
-/*
+
     //The pulley system
     {
       b2BodyDef *bd = new b2BodyDef;
       bd->type = b2_dynamicBody;
-      bd->position.Set(-10,15);
+      bd->position.Set(-2,15);
       bd->fixedRotation = true;
       
       //The open box
@@ -292,23 +459,23 @@ namespace cs296
       box1->CreateFixture(fd3);
 
       //The bar
-      bd->position.Set(10,15);	
-      fd1->density = 34.0;	  
+      bd->position.Set(5,15);	
+      fd1->density = 32.0;	  
       b2Body* box2 = m_world->CreateBody(bd);
       box2->CreateFixture(fd1);
 
       // The pulley joint
       b2PulleyJointDef* myjoint = new b2PulleyJointDef();
-      b2Vec2 worldAnchorOnBody1(-10, 15); // Anchor point on body 1 in world axis
-      b2Vec2 worldAnchorOnBody2(10, 15); // Anchor point on body 2 in world axis
-      b2Vec2 worldAnchorGround1(-10, 20); // Anchor point for ground 1 in world axis
-      b2Vec2 worldAnchorGround2(10, 20); // Anchor point for ground 2 in world axis
+      b2Vec2 worldAnchorOnBody1(-2, 18); // Anchor point on body 1 in world axis
+      b2Vec2 worldAnchorOnBody2(5, 18); // Anchor point on body 2 in world axis
+      b2Vec2 worldAnchorGround1(-2, 23); // Anchor point for ground 1 in world axis
+      b2Vec2 worldAnchorGround2(5, 23); // Anchor point for ground 2 in world axis
       float32 ratio = 1.0f; // Define ratio
       myjoint->Initialize(box1, box2, worldAnchorGround1, worldAnchorGround2, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
       m_world->CreateJoint(myjoint);
     }
 
-*/
+
 
 
 
