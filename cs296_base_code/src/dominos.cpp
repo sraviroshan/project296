@@ -459,7 +459,7 @@ namespace cs296
       box1->CreateFixture(fd3);
 
       //The bar
-      bd->position.Set(5,15);	
+      bd->position.Set(7,15);	
       fd1->density = 32.0;	  
       b2Body* box2 = m_world->CreateBody(bd);
       box2->CreateFixture(fd1);
@@ -467,9 +467,9 @@ namespace cs296
       // The pulley joint
       b2PulleyJointDef* myjoint = new b2PulleyJointDef();
       b2Vec2 worldAnchorOnBody1(-2, 18); // Anchor point on body 1 in world axis
-      b2Vec2 worldAnchorOnBody2(5, 18); // Anchor point on body 2 in world axis
+      b2Vec2 worldAnchorOnBody2(7, 18); // Anchor point on body 2 in world axis
       b2Vec2 worldAnchorGround1(-2, 23); // Anchor point for ground 1 in world axis
-      b2Vec2 worldAnchorGround2(5, 23); // Anchor point for ground 2 in world axis
+      b2Vec2 worldAnchorGround2(7, 23); // Anchor point for ground 2 in world axis
       float32 ratio = 1.0f; // Define ratio
       myjoint->Initialize(box1, box2, worldAnchorGround1, worldAnchorGround2, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
       m_world->CreateJoint(myjoint);
@@ -510,9 +510,179 @@ namespace cs296
       m_world->CreateJoint(&jointDef);
     
     }
+////////////////////////////////////////////////
+    {
+	/*!
+	* <pre>
+	* body - type b2Body* variable to declare rhp
+	* body2 - type b2Body* variable to declare dummy body to join body with joint
+	* fd - declaring fixture variable of type b2FixtureDef for rhp
+	* jointDef.collideConnected = false - so that body and body2 do not collide
+    * </pre>
+    */
+      b2PolygonShape shape;			//declaring variable for rhp body
+      shape.SetAsBox(2.2f, 0.2f);	//setting shape of the rhp body
+	
+      b2BodyDef bd;					//declaring variable for defining rhp body
+      bd.position.Set(10.0f, 20.0f);//setting postion of rhp body
+      bd.type = b2_dynamicBody;		//setting rhp body as dynamic type
+      b2Body* body = m_world->CreateBody(&bd);	//creating rhp body
+      b2FixtureDef *fd = new b2FixtureDef;		//declaring fixture variable for rhp
+      fd->density = 1.0f;						//setting density
+      fd->shape = new b2PolygonShape;			//declaring polygon shape 
+      fd->shape = &shape;						//assigning rhp body shape 
+      body->CreateFixture(fd);					//creating fixture for rhp body
 
+	//The Revolving horizontal bar on which larger sphereical ball is kept
+      b2PolygonShape shape2;					//variable for the shape of the bar
+      shape2.SetAsBox(8.2f, 2.0f);				//setting shape of the bar
+      b2BodyDef bd2;							//variable to define the bar
+      bd2.position.Set(10.0f, 21.0f);			//setting the postion of bar
+//ravi rotater 
+      b2Body* body2 = m_world->CreateBody(&bd2);//declaring and creating the body of bar
+
+	//creaing revolving joint to revolving bar
+      b2RevoluteJointDef jointDef;				//declaring joint
+      jointDef.bodyA = body;              //body A of joint
+      jointDef.bodyB = body2;             //body B of joint
+      jointDef.localAnchorA.Set(0,0);     //setting anchor A to (0,0)
+      jointDef.localAnchorB.Set(0,0);     //setting anchor B to (0,0)
+      jointDef.collideConnected = false;  //attached bodies must not collide
+      m_world->CreateJoint(&jointDef);    //creating joint
+    }
+///////////////////////////////////////////
+//tilt slop path
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(4.30f, 0.3f);
+	
+      b2BodyDef bd;
+      bd.position.Set(12.70f, 18.0f);
+      bd.type = b2_dynamicBody;
+      b2Body* body = m_world->CreateBody(&bd);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 10.f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+
+      b2PolygonShape shape2;
+      shape2.SetAsBox(4.30f, 0.30f);
+      b2BodyDef bd2;
+      bd2.position.Set(12.70f, 18.0f);
+      b2Body* body2 = m_world->CreateBody(&bd2);
+
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = body;
+      jointDef.bodyB = body2;
+      jointDef.localAnchorA.Set(0,0);
+      jointDef.localAnchorB.Set(0,0);
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+    
+    }
+//for stop on certain angle
+
+{
+      b2PolygonShape shape;
+      shape.SetAsBox(0.3f, 0.3f);
+	
+      b2BodyDef bd;
+      bd.position.Set(15.30f, 21.0f);
+      bd.type = b2_dynamicBody;
+      b2Body* body = m_world->CreateBody(&bd);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 10.f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+
+      b2PolygonShape shape2;
+      shape2.SetAsBox(0.3f, 0.30f);
+      b2BodyDef bd2;
+      bd2.position.Set(15.30f, 21.0f);
+      b2Body* body2 = m_world->CreateBody(&bd2);
+
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = body;
+      jointDef.bodyB = body2;
+      jointDef.localAnchorA.Set(0,0);
+      jointDef.localAnchorB.Set(0,0);
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+    
+    }
+
+//another tilt
+
+{
+      b2PolygonShape shape;
+      shape.SetAsBox(4.3f, 0.3f);
+	
+      b2BodyDef bd;
+      bd.position.Set(20.0f, 15.0f);
+      bd.type = b2_dynamicBody;
+      b2Body* body = m_world->CreateBody(&bd);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 10.f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+
+      b2PolygonShape shape2;
+      shape2.SetAsBox(4.3f, 0.30f);
+      b2BodyDef bd2;
+      bd2.position.Set(20.0f, 15.0f);
+      b2Body* body2 = m_world->CreateBody(&bd2);
+
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = body;
+      jointDef.bodyB = body2;
+      jointDef.localAnchorA.Set(0,0);
+      jointDef.localAnchorB.Set(0,0);
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+    
+    }
+//another stoper
+{
+      b2PolygonShape shape;
+      shape.SetAsBox(0.3f, 0.3f);
+	
+      b2BodyDef bd;
+      bd.position.Set(21.30f, 17.0f);
+      bd.type = b2_dynamicBody;
+      b2Body* body = m_world->CreateBody(&bd);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 10.f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+
+      b2PolygonShape shape2;
+      shape2.SetAsBox(0.3f, 0.30f);
+      b2BodyDef bd2;
+      bd2.position.Set(21.30f, 17.0f);
+      b2Body* body2 = m_world->CreateBody(&bd2);
+
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = body;
+      jointDef.bodyB = body2;
+      jointDef.localAnchorA.Set(0,0);
+      jointDef.localAnchorB.Set(0,0);
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+    
+    }
+
+
+
+
+
+
+////////////////////////////////////
     //The heavy sphere on the platform
- /*   {
+   {
       b2Body* sbody;
       b2CircleShape circle;
       circle.m_radius = 1.0;
@@ -524,11 +694,11 @@ namespace cs296
       ballfd.restitution = 0.0f;
       b2BodyDef ballbd;
       ballbd.type = b2_dynamicBody;
-      ballbd.position.Set(14.0f, 18.0f);
+      ballbd.position.Set(10.0f, 23.0f);
       sbody = m_world->CreateBody(&ballbd);
       sbody->CreateFixture(&ballfd);
     }
-*/
+
 
     //The see-saw system at the bottom
     {
