@@ -132,13 +132,6 @@ namespace cs296
       ground->CreateFixture(&shape, 0.0f);
     }
 
-
-
-
-
-
-
-
       
     //Top horizontal shelf
     {
@@ -544,22 +537,7 @@ namespace cs296
       }
     } 
 
-    //lower slab
-    {
-      b2PolygonShape slab;
-      slab.SetAsBox(6.1f, 1.70f);
-  
-      b2FixtureDef fd;
-      fd.shape = &slab;
-      fd.density = 1.0f;
-      fd.friction = 0.1f;
-    
-      b2BodyDef bd;
-      bd.type = b2_dynamicBody;
-      bd.position.Set(-26.5f , 02.0f);
-      b2Body* body = m_world->CreateBody(&bd);
-      body->CreateFixture(&fd);
-    }
+
     //lower slab2
     {
       b2PolygonShape slab;
@@ -583,7 +561,7 @@ namespace cs296
       shape.SetAsBox(2.0f, 0.25f);
   
       b2BodyDef bd;
-      bd.position.Set(-30.0f, 4.0f);
+      bd.position.Set(-30.0f, 3.7f);
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
 
@@ -605,7 +583,71 @@ namespace cs296
       b2Body* upv1ground = m_world->CreateBody(&upv1bd);
       upv1ground->CreateFixture(&upv1shape, 0.0f);
     }
-  }
 
+
+        //bubble
+    {
+     
+    b2Body* sbody;
+    {
+      // b2Vec2 gravity(0.0f, 0f);
+      // bool doSleep = false;
+      // b2World* g_World = new b2World(gravity, doSleep);
+
+      
+      //b2Body* sbody;
+      b2CircleShape circle;
+      circle.m_radius = 2.0;
+  
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 1.40f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+      b2BodyDef ballbd;
+      ballbd.type = b2_dynamicBody;
+      ballbd.position.Set(-34.80f, 8.50f);
+      sbody = m_world->CreateBody(&ballbd);
+      
+      //sbody->ApplyForce( sbody->GetMass() * -m_world->GetGravity(), sbody->GetWorldCenter() );
+      //Box2D v2.2.1 onwards
+      sbody->SetGravityScale(-1);//cancel gravity (use -1 to reverse gravity, etc)
+      sbody->CreateFixture(&ballfd);
+
+     // sbody->setLinearVelocity(0, -10);
+
+      }
+
+      //lower slab
+      b2Body* slabbody;
+    {
+      b2PolygonShape slab;
+      slab.SetAsBox(6.1f, 1.70f);
+  
+      b2FixtureDef fd;
+      fd.shape = &slab;
+      fd.density = .50f;
+      fd.friction = 0.1f;
+    
+      b2BodyDef bd;
+      bd.type = b2_dynamicBody;
+      bd.position.Set(-26.5f , 02.0f);
+      slabbody = m_world->CreateBody(&bd);
+      slabbody->CreateFixture(&fd);
+    }
+    //roop
+      b2RopeJointDef rp;
+      rp.bodyA=sbody; //define bodies
+      rp.bodyB=slabbody;
+      rp.localAnchorA = b2Vec2(0,0); //define anchors
+      rp.localAnchorB = b2Vec2(-6,0);
+      rp.maxLength=((sbody->GetPosition()) - slabbody->GetPosition() ).Length(); //define max length of joint = current distance between bodies
+      m_world->CreateJoint(&rp); //create joint    
+
+    }
+
+  }  
+  
   sim_t *sim = new sim_t("Dominos", dominos_t::create);
+
 }
