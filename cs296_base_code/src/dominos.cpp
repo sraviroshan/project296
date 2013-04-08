@@ -54,6 +54,40 @@ namespace cs296
 
 
 
+//////////////////////////
+    //moter
+    {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.2f, 2.2f);
+     
+      b2BodyDef bd;
+      bd.position.Set(-47.0f, 42.0f);
+      bd.type = b2_dynamicBody;
+      b2Body* body = m_world->CreateBody(&bd);
+      b2FixtureDef *fd = new b2FixtureDef;
+      fd->density = 30.0f;
+      fd->shape = new b2PolygonShape;
+      fd->shape = &shape;
+      body->CreateFixture(fd);
+ 
+      b2PolygonShape shape2;
+      shape2.SetAsBox(2.0f, 0.2f);
+      b2BodyDef bd2;
+      bd2.position.Set(-47.0f, 43.0f);
+      b2Body* body2 = m_world->CreateBody(&bd2);
+ 
+      b2RevoluteJointDef jointDef;
+      jointDef.bodyA = body;
+      jointDef.bodyB = body2;
+      jointDef.localAnchorA.Set(0,0);
+      jointDef.localAnchorB.Set(0,0);
+      jointDef.maxMotorTorque = 100.0f;
+      jointDef.motorSpeed = 10.0f;
+      jointDef.enableMotor = true;
+      jointDef.collideConnected = false;
+      m_world->CreateJoint(&jointDef);
+    }
+
     
     //top slop
     { 
@@ -83,7 +117,7 @@ namespace cs296
       ballfd.restitution = 0.0f;
       b2BodyDef ballbd;
       ballbd.type = b2_dynamicBody;
-      ballbd.position.Set(-35.80f, 40.50f);
+      ballbd.position.Set(-43.80f, 40.50f);
       sbody = m_world->CreateBody(&ballbd);
       sbody->CreateFixture(&ballfd);
     }
@@ -136,38 +170,6 @@ namespace cs296
 	  body->CreateFixture(&fd);
 	}
     
-   //slab on base ground
-
-    
-  // {
-  //     b2PolygonShape shape;
-  //     shape.SetAsBox(0.3f, 2.2f);
-  
-  //     b2BodyDef bd;
-  //     bd.position.Set(-8.30f, 34.0f);
-  //     bd.type = b2_dynamicBody;
-  //     b2Body* body = m_world->CreateBody(&bd);
-  //     b2FixtureDef *fd = new b2FixtureDef;
-  //     fd->density = 1.f;
-  //     fd->shape = new b2PolygonShape;
-  //     fd->shape = &shape;
-  //     body->CreateFixture(fd);
-
-  //     b2PolygonShape shape2;
-  //     shape2.SetAsBox(0.3f, 2.20f);
-  //     b2BodyDef bd2;
-  //     bd2.position.Set(-8.30f, 34.0f);
-  //     b2Body* body2 = m_world->CreateBody(&bd2);
-
-  //     b2RevoluteJointDef jointDef;
-  //     jointDef.bodyA = body;
-  //     jointDef.bodyB = body2;
-  //     jointDef.localAnchorA.Set(0,0);
-  //     jointDef.localAnchorB.Set(0,0);
-  //     jointDef.collideConnected = false;
-  //     m_world->CreateJoint(&jointDef);
-    
-  //   }
 
 
 //*********
