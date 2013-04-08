@@ -99,6 +99,7 @@ doc:
 clean:
 	@$(ECHO) -n "Cleaning up..."
 	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~ $(BINDIR)
+	@$(RM) -rf doc/html
 	@$(ECHO) "Done"
 
 distclean: clean
