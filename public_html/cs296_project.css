@@ -1,0 +1,60 @@
+@charset "utf-8";
+/* CSS Document */
+
+.welcome1 {
+	position:absolute;
+	left:700px;
+}
+
+.welcome1 {
+	position:absolute;
+	left:1000px;
+}
+.sravi1 {
+	position:absolute;
+	left:000px;
+}
+
+.sravi2 {
+	position:absolute;
+	left:300px;
+}
+.sravi3 {
+	position:absolute;
+	left:600px;
+}
+.sravi4 {
+	position:absolute;
+	left:900px;
+}
+
+.vedio {
+	position:absolute;
+	left:400px;
+}
+.sanchit {
+	position:absolute;
+	left:00px;
+}
+.sravi {
+	position:absolute;
+	left:1000px;
+	
+}
+.table_content{
+	background-color:#623274;
+	color:#CCC;
+	/*border-radius:5px;*/
+	width:200px;
+	font-size:24px;
+	cursor:pointer;
+	padding:3px;
+	text-align:left;
+}
+
+#resume{left:400px;width:100px;}
+/*
+resume{background:url (image/sr_ab4.png) -760px -10px;}
+resume a:hover {background:url (image/sr_ab4.png) -760px -10px;} 
+*/
+
