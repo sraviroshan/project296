@@ -516,20 +516,38 @@ namespace cs296
 
 
 
-
-//3 slab for initiation of boll && boll in pulley
-//14
-{
+	//Horizontal Platform
+	//!<B style="color:red">14. The Horizontal PLatform</B>
+	/*!
+ 	 * <pre>
+ 	 * a ball rests on it and which gets hit by Newton's Cradle. hits that ball, it moves and fall in pulley box.
+ 	 * shape - type b2PolygonShape and set as box of dimension(10x0.25)
+ 	 * bd - type b2BodyDef holds the defination for b2Body* hori_plat
+ 	 * CreateFixture(&shape, 0.0f) - Creates fixture.
+ 	 * </pre>
+	 */ 
+	
 	{
       b2PolygonShape shape;
       shape.SetAsBox(10.0f, 0.25f);
 	
       b2BodyDef bd;
       bd.position.Set(-16.0f, 20.0f);
-      b2Body* ground = m_world->CreateBody(&bd);
-      ground->CreateFixture(&shape, 0.0f);
+      b2Body* hori_plat = m_world->CreateBody(&bd);
+      hori_plat->CreateFixture(&shape, 0.0f);
     }
     
+   //Ball on previous Horizontal Platform
+	//!<B style="color:red">15. The Horizontal PLatform</B>
+	/*!
+ 	 * <pre>
+ 	 * When Newton's Cradle hits the ball, it moves and fall in pulley box.
+ 	 * circle - type b2CircleShape and set radius as 1.5.
+ 	 * ballbd - type b2BodyDef holds the defination for b2Body* sbody2.
+ 	 * m_world->CreateBody(&ballbd) - creates body with ballbd as body defination.
+ 	 * CreateFixture(&ballfd, 0.0f) - Creates fixture ballfd of sbody2.
+ 	 * </pre>
+	 */
         b2Body* sbody2;
    {
       b2CircleShape circle;
@@ -548,13 +566,37 @@ namespace cs296
     }
 
     //The pulley system
+    //!<B style="color:red">16. The Pulley System</B> 
+    /*!
+     * <pre>
+     * On one side of Pulley there is open box and on other side there is horizontal plank.
+     * When ball comes in open box, it becomes heavier and starts going down. Other side starts lifting up as a result of this
+     * this plank rotates the other plank and balls on it falls down.
+     * </pre>
+     */
     {
+    	/*!
+	 	 * <pre>
+	 	 * <B>16.1 the open box is made up of 3 bars. One hori. and 2 verticle (|_|)</B>
+	 	 * 	bd - variable of type b2BodyDef which holds the data for the open box
+	 	 * 	open box is dynamic body prevented from rotation and set to position (-10,15)
+	 	 * </pre>
+		 */ 
+      //the open box
       b2BodyDef *bd = new b2BodyDef;
       bd->type = b2_dynamicBody;
       bd->position.Set(-2,17);
       bd->fixedRotation = true;
       
-      //The open box
+    	//horizontal bar of open box
+		/*!
+		* <pre>
+		* <B>horizontal bar</B>
+		* bs1 - type b2PolygonShape to declare shape of bar
+		* center of bar(4x0.4) is set to (0,-1.9) and rotation angle 0
+		* fd1 - type b2FixtureDef to declare fixtures of horizontal bar with density, fric., resti. and shape be 10 , 0.5 , 0 and bs1 
+		* </pre>
+		*/ 
       b2FixtureDef *fd1 = new b2FixtureDef;
       fd1->density = 10.0;
       fd1->friction = 0.5;
@@ -563,6 +605,15 @@ namespace cs296
       b2PolygonShape bs1;
       bs1.SetAsBox(2,0.2, b2Vec2(0.f,-1.9f), 0);
       fd1->shape = &bs1;
+      /*!
+		* <pre>
+		* <B>ist vertical bar</B>
+		* bs2 - type b2PolygonShape to declare shape of bar
+		* center of bar(4x0.4) is set to (2.0,0) and rotation angle 0
+		* fd2 - type b2FixtureDef to declare fixtures of horizontal bar with density, fric., resti. and shape be 10 , 0.5 , 0 and bs2
+		* </pre>
+		*/   
+      //1st vertical bar
       b2FixtureDef *fd2 = new b2FixtureDef;
       fd2->density = 10.0;
       fd2->friction = 0.5;
@@ -571,6 +622,15 @@ namespace cs296
       b2PolygonShape bs2;
       bs2.SetAsBox(0.2,2, b2Vec2(2.0f,0.f), 0);
       fd2->shape = &bs2;
+      /*!
+		* <pre>
+		* <B>2nd vertical bar</B>
+		* bs3 - type b2PolygonShape to declare shape of bar
+		* center of bar(4x0.4) is set to (-2.0,0) and rotation angle 0
+		* fd3 - type b2FixtureDef to declare fixtures of horizontal bar with density, fric., resti. and shape be 10 , 0.5 , 0 and bs2
+		* </pre>
+		*/      
+      //2nd vertical bar
       b2FixtureDef *fd3 = new b2FixtureDef;
       fd3->density = 10.0;
       fd3->friction = 0.5;
@@ -579,13 +639,24 @@ namespace cs296
       b2PolygonShape bs3;
       bs3.SetAsBox(0.2,2, b2Vec2(-2.0f,0.f), 0);
       fd3->shape = &bs3;
-       
+      /*!
+		* <pre>
+		* box1 - c open box(box1) with and setting fixtures fd1, fd2 and fd3 to open box 
+		*</pre> 
+		*/
       b2Body* box1 = m_world->CreateBody(bd);
       box1->CreateFixture(fd1);
       box1->CreateFixture(fd2);
       box1->CreateFixture(fd3);
 
-      //The bar
+      //The hori. bar on the other side of pulley system
+	    /*!
+		  * <pre>
+		  * <B>16.2 The horizontal bar on the other side of pulley system</B>
+		  * box2 - type b2Body.
+		  * create box2 body and set its position to (7,17) and density 30
+	 	  * </pre> 
+	 	  */
       bd->position.Set(7,17);	
       fd1->density = 30.0;	  
       b2Body* box2 = m_world->CreateBody(bd);
@@ -602,10 +673,9 @@ namespace cs296
       m_world->CreateJoint(myjoint);
     }
 
-}
 
     //Revolving Platform
-    //!<B style="color:red">15. Revolving Platform</B>
+    //!<B style="color:red">17. Revolving Platform</B>
 	  /*!
 	   * <pre>
      * This platform has spherical ball resting on it whose motion is triggered when rhs of pulley hits the plank.
@@ -649,7 +719,7 @@ namespace cs296
 ///////////////////////////////////////////
 
   //The heavy sphere on the platform
-  //!<B style="color:red">16. The heavy sphere on the platform</B>
+  //!<B style="color:red">18. The heavy sphere on the platform</B>
   /*!
    * <pre>
    * This is the Ball which rolls down and hits the dominos
@@ -679,7 +749,7 @@ namespace cs296
     }
 
     //Side Slant Curve1
-    //!<B style="color:red">17. Side Slant Curve1</B>
+    //!<B style="color:red">19. Side Slant Curve1</B>
     /*!
      * <pre>
      * Ball Rolls down from this slope to push the piston box.
@@ -706,7 +776,7 @@ namespace cs296
 
 
     //Side Slant Curve2
-    //!<B style="color:red">18. Side Slant Curve2</B>
+    //!<B style="color:red">20. Side Slant Curve2</B>
     /*!
      * <pre>
      * Similar but miiror image of previous curve
@@ -729,7 +799,7 @@ namespace cs296
 
 
     //Lower Slab
-    //!<B style="color:red">19. Lower Slab</B>
+    //!<B style="color:red">21. Lower Slab</B>
     /*!
      * <pre>
      * This Slab is kind of piston tigger, when hit by sphere it pushes another slab attached from balloon in piston which comes out of piston.
@@ -760,7 +830,7 @@ namespace cs296
     }
 
     //Piston Body
-    //!<B style="color:red">20. Piston Body</B>
+    //!<B style="color:red">22. Piston Body</B>
     /*!
      * <pre>                                           _   
      * This is made up of three bodies of the shape '_| ' (reverse Z).
@@ -801,7 +871,7 @@ namespace cs296
 
 
     //Balloon Connected with slab 
-    //!<B style="color:red">21. Balloon Connected with slab</B>
+    //!<B style="color:red">23. Balloon Connected with slab</B>
     /*!
      * <pre>   
      * This is made up of two bodies. One is slab and other is balloon.
