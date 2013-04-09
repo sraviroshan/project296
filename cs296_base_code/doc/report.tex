@@ -32,7 +32,7 @@ First we start with implemented design. Design is very simple. Implemented and o
 \subsection{Implemented Design}	
 
 \begin{center}
-\includegraphics[scale=0.3]{./photo1.png}
+\includegraphics[scale=0.3]{./doc/photo1.png}
 \begin{center}
 Fig.1
 \end{center}
@@ -44,7 +44,7 @@ This ball rolls down from a slope and hits the train of Dominos standing on hori
 \subsection{Original Design}
 There are 3 changes apart from body's structure :
 \begin{center}
-\includegraphics[scale=0.3]{./idea.png}
+\includegraphics[scale=0.3]{./doc/idea.png}
 \begin{center}
 Fig.2
 \end{center}
@@ -75,7 +75,50 @@ Fig.2
 \end{description}
 \end{itemize}
 
+
+\section{Profiling}
+A profiler is used to identify what are the parts of your code are taking the maximum time. This helps in identifying parts of your code that can be optimized. Here below is the profiling done first with optimization i.e with release mode on and second with debugging mode on. For profiling we have used perf tool.
+
+\subsection{Observations}
+Analysis has beem done on the iteration no. 200, 1000 and 5000.
+\begin{itemize}
+\item{For Iteration no. 200}
+\begin{description} In debug mode maximum time is taken by "b2ContactSolver::SolveVelocityConstraints()" approx. 19.55\% while in release mode maximum time is taken by "b2World::Step(float, int, int)" approx. 11.13\% but next is "b2ContactSolver::SolveVelocityConstraints()" approx. 9.15\%.
+\end{description}
+
+\item{For Iteration no. 1000}
+\begin{description} In debug mode maximum time is taken by "b2ContactSolver::SolveVelocityConstraints()" approx. 9.55\% while in release mode maximum time is taken by "b2EdgeSeparation(b2PolygonShape const*, b2Transform const\&, int, b2PolygonShape const*)" approx. 20.13\% but next is "b2ContactSolver::SolveVelocityConstraints()" approx. 15\%.
+\end{description}
+
+\item{For Iteration no. 5000}
+\begin{description} In both mode maximum time is taken by "b2ContactSolver::SolveVelocityConstraints()" approx. 6.33\% in debug mode and 18.20\% in release mode.
+\end{description}
+
+\end{itemize}
+
+\subsection{Call Graphs}
+The call graph shows how much time was spent in each function and it’s children. Here is the call grpahs for both release and debug mode for iteration no. 200. We can see clearly the complexity of the running the simulation in both the cases.
+
+\begin{center}
+\includegraphics[scale=0.1]{./doc/deb_output200.png}
+\begin{center}
+Fig.3 Call Graph for Debug Mode:Itr value 200
+\end{center}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.1]{./doc/rel_output200.png}
+\begin{center}
+Fig.3 Call Graph for Release Mode:Itr value 200
+\end{center}
+\end{center}
+
+\subsection{Conclusion}
+\begin{itemize}
+\item{We can see that number of functions calls for constructors are reduced drastically in the release part as compared to debug part and hence indicates that optimization ﬂags work on constructors.}
+
+\item{Here is a consistent observation. Most of the time is taken by method "b2ContactSolver::SolveVelocityConstraints()". Hence there is a possiblity of implementation optimization of this function in Box2D Library.}
 \section{Conclusion}
 Thus in the report we have analyzed and timed the code under different conditions and summerized the results.
-
+\end{itemize}
 \end{document}

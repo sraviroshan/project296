@@ -112,9 +112,9 @@ debug_prof:clean $(BUILD2DDIR)/Box2D.tgz
 		@cd $(BUILD2DDIR)/Box2D/build296 && cmake -DCMAKE_BUILD_TYPE=Debug ../ && make  && make install
 		@make
 		@mkdir -p data
-		@perf record -g ./bin/cs296_base 5000
+		@perf record -g ./bin/cs296_base 200
 		@chmod 777 gprof2dot.py
-		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/deb_output5000.png
+		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/deb_output200.png
 		@rm -f perf.*
 		
 		
@@ -126,10 +126,19 @@ release_prof:clean $(BUILD2DDIR)/Box2D.tgz
 		@cd $(BUILD2DDIR)/Box2D/build296 && cmake -DCMAKE_BUILD_TYPE=Release ../ && make  && make install
 		@make
 		@mkdir -p data
-		@perf record -g ./bin/cs296_base 5000
+		@perf record -g ./bin/cs296_base 200
 		@chmod 777 gprof2dot.py
-		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/rel_output5000.png
+		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/rel_output200.png
 		@rm -f perf.*
+
+
+datadir : 
+	@mkdir -p data
+
+report:datadir $(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/deb_output200.png $(DOCDIR)/rel_output200.png
+	@pdflatex $(DOCDIR)/report.tex
+	@mv report.pdf $(DATADIR)/report.pdf
+	@rm report.*
 
 
 clean:
