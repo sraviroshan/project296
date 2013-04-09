@@ -132,18 +132,9 @@ release_prof:clean $(BUILD2DDIR)/Box2D.tgz
 		@rm -f perf.*
 
 
-
-
-
-
-
-
-
-
-
 clean:
 	@$(ECHO) -n "Cleaning up..."
-	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~ $(DATADIR) $(PLOTDIR)
+	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~ $(DATADIR)
 	@$(RM) -rf $(BINDIR)
 	@$(RM) -rf doc/html
 	@$(ECHO) "Done"

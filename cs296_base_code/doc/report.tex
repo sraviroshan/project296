@@ -1,0 +1,81 @@
+%latex report
+
+\documentclass[a4paper,11pt]{article}
+\usepackage{times}
+\usepackage{graphicx}
+%\usepackage{amsmath}
+\usepackage{natbib}
+\usepackage[top=2.54cm, bottom=2.54cm, right=1.27cm, left=1.27cm]{geometry}
+\begin{document}
+
+
+\title{Physics Behind the Simulation: A CS296 Group 31 Report.}
+
+\author{Sanchit Garg\\ 110050035\\	\texttt{sanchitgarg@cse.iitb.ac.in} \and
+		Ravi Kumar Roshan\\ 110050033\\ \texttt{sraviroshan@cse.iitb.ac.in}
+		}
+
+\date{10 April, 2013}
+
+\maketitle
+
+
+\section{Introduction}
+A Rube Goldberg machine, contraption, invention, device, or apparatus is a deliberately over-engineered or overdone machine that performs a very simple task in a very complex fashion, usually including a chain reaction. The expression is named after American cartoonist and inventor Rube Goldberg (1883–1970). %////Wikipedia
+
+This is a small Project Report about the simulation and contraption using C++ Simulator engine Box2D under the CS296 Lab Course.
+
+Here we first describe the design of the simulation followed by its timing and Profiling issues.
+
+\section{Design}
+First we start with implemented design. Design is very simple. Implemented and original design are almost same. We then describe some minor changes we have done in original design.
+\subsection{Implemented Design}	
+
+\begin{center}
+\includegraphics[scale=0.3]{./photo1.png}
+\begin{center}
+Fig.1
+\end{center}
+\end{center}
+
+First a Motored plank. It starts revolving and strikes a ball resting on a platform. 
+This ball rolls down from a slope and hits the train of Dominos standing on horizontal Platform. Dominos start falling. There is a rotating shaft near the end of this domino train. It gets hit by the dominos. This shaft while rotating hits another train of Dominos standing on another horizontal platform just below the first one. On the end of this domino train there is another rotating shaft which do the same purpose that as of the previous one. This rotates on hit by dominos. On the way of its rotaion Newton's Cradle is kept. Shaft hits the Newton's Cradle. Near the end of the Cradle a ball is kept. This  ball get struck by the cradle and rolls horizontally and finally enters in pully system. There is a Bucket(open box) into which the ball falls. When this ball falls, the bucket becomes heavier and starting coming dowm and as a result the other side of pulley which is connected by a horizontal plank, starts moving up and make rotates the another horizontal platform. There is a ball resting on this platform which falls down due to movement of platform. This ball follows a zig-zag path on two curves and falls on ground and moves towards a piston. Finally the ball hits the piston. On the mouth of piston there is a block attached with a balloon. This balloon is basically a ball whose gravity is reversed. Ball coming towards the piston hits and balloon moves up along with block.
+
+\subsection{Original Design}
+There are 3 changes apart from body's structure :
+\begin{center}
+\includegraphics[scale=0.3]{./idea.png}
+\begin{center}
+Fig.2
+\end{center}
+\end{center}
+
+\begin{itemize}
+\item {Motored Plank}
+\begin{description} Instead of motored plank We thought of a revolving ball which is in contact with a plank. As ball rotates plank moves and hit a ball and continue.
+\end{description}
+
+\item {Second Revolving Shaft}
+\begin{description} Instead of second revovling shaft We planned that at the end of the second dominos train there is a inverted pendulum standing and on hit it moves down and starts the motion of Newton's Cradle.
+\end{description}
+
+\item{Bursting of Balloon}
+\begin{description} We thought that as the balloon rise it would come into the contact of a pointed thing and will burst.
+\end{description}
+\end{itemize}
+
+\subsection{Interesting Features}
+\begin{itemize}
+\item {Newton's Cradle}
+\begin{description} Newtons Cradle may look like interesting but in simulation the exact effect of it has not achieved i.e only end balls move.
+\end{description}
+
+\item {Rising Balloon}
+\begin{description} Rising Balloon (acieved by reversing its gravity) may look like interesting.
+\end{description}
+\end{itemize}
+
+\section{Conclusion}
+Thus in the report we have analyzed and timed the code under different conditions and summerized the results.
+
+\end{document}
