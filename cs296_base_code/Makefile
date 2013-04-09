@@ -24,6 +24,7 @@ DOCDIR = $(PROJECT_ROOT)/doc
 SCRIPTDIR = $(PROJECT_ROOT)/scripts
 DATADIR = $(PROJECT_ROOT)/data
 PLOTDIR = $(PROJECT_ROOT)/plots
+BUILD2DDIR  = $(EXTERNAL_ROOT)/src
 
 # Library Paths
 BOX2D_ROOT=$(EXTERNAL_ROOT)
@@ -34,7 +35,10 @@ GL_ROOT=/usr
 LIBS = -lBox2D -lglui -lglut -lGLU -lGL
 
 # Compiler and Linker flags
-CPPFLAGS =-g -O3 -Wall 
+cxxflags.debug := -g -Wall
+cxxflags.release := -g -O3 -Wall
+CPPFLAGS = ${cxxflags.${BUILD_MYflag}}
+#CPPFLAGS =-g -O3 -Wall 
 CPPFLAGS+=-I $(BOX2D_ROOT)/include -I $(GLUI_ROOT)/include
 LDFLAGS+=-L $(BOX2D_ROOT)/lib -L $(GLUI_ROOT)/lib
 
@@ -100,38 +104,38 @@ doc:
 	@$(ECHO) "Done"
 
 
-setup1:
-	@mkdir -p plots
-	@mkdir -p data
+debug_prof:clean $(BUILD2DDIR)/Box2D.tgz
+	BUILD_MYflag=debug
+		@cd $(BUILD2DDIR) && rm -rf Box2D
+		@cd $(BUILD2DDIR) && tar -xvf Box2D.tgz 
+		@cd $(BUILD2DDIR)/Box2D && mkdir -p build296
+		@cd $(BUILD2DDIR)/Box2D/build296 && cmake -DCMAKE_BUILD_TYPE=Debug ../ && make  && make install
+		@make
+		@mkdir -p data
+		@perf record -g ./bin/cs296_base 5000
+		@chmod 777 gprof2dot.py
+		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/deb_output5000.png
+		@rm -f perf.*
+		
+		
+release_prof:clean $(BUILD2DDIR)/Box2D.tgz
+	BUILD_MYflag=release
+		@cd $(BUILD2DDIR) && rm -rf Box2D
+		@cd $(BUILD2DDIR) && tar -xvf Box2D.tgz 
+		@cd $(BUILD2DDIR)/Box2D && mkdir -p build296
+		@cd $(BUILD2DDIR)/Box2D/build296 && cmake -DCMAKE_BUILD_TYPE=Release ../ && make  && make install
+		@make
+		@mkdir -p data
+		@perf record -g ./bin/cs296_base 5000
+		@chmod 777 gprof2dot.py
+		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/rel_output5000.png
+		@rm -f perf.*
 
-gen_csv:
-	@$(ECHO) -n "Generating lab05_g31_data.csv File"
-	@chmod 777 $(SCRIPTDIR)/gen_data_csv.sh
-	@$(SCRIPTDIR)/gen_data_csv.sh
 
 
-plot:all setup1 gen_csv
-	@chmod 777 $(SCRIPTDIR)/*
-	@$(ECHO) -n "Generating Plot1..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper01.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot01.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot01.gpt
-	@$(ECHO) -n "Generating Plot2..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper02.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot02.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot02.gpt
-	@$(ECHO) -n "Generating Plot3..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper03.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot03.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot03.gpt
-	@$(ECHO) -n "Generating Plot4..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper04.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot04.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot04.gpt
-	@$(ECHO) -n "Generating Plot5..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper05.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot05.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot05.gpt
-	@$(ECHO) -n "Generating Plot6..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper06.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot06.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot06.gpt
-	rm -f $(DATADIR)/*.dat
-	@$(ECHO) -n "All Graphs are saved in plots folder"
+
+
+
 
 
 
