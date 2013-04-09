@@ -11,27 +11,34 @@
 	left:1000px;
 }
 .sravi1 {
-	position:absolute;
-	left:000px;
-	
+	/*position:absolute;
+	left:000px;*/
+	position:absolute;left:100px;top:500px;
 }
 
 .sravi2 {
-	position:absolute;
+	/*position:absolute;
 	left:300px;
+	top:700px; */
+	position:absolute;left:750px;top:500px;
 }
 .sravi3 {
-	position:absolute;
+	/*position:absolute;
 	left:600px;
+	top:700px; */
+	position:absolute;left:100px;top:950px;
 }
 .sravi4 {
-	position:absolute;
+	/*position:absolute;
 	left:900px;
+	top:700px; */
+	position:absolute;left:750px;top:950px;
 }
 
-.vedio {
+.vedio1 {
 	position:absolute;
 	left:400px;
+	
 }
 .sanchit {
 	position:absolute;
