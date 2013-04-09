@@ -846,7 +846,7 @@ namespace cs296
       shape.SetAsBox(2.0f, 0.25f);
   
       b2BodyDef bd;
-      bd.position.Set(-30.0f, 3.7f);
+      bd.position.Set(-30.0f, 3.6f);
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
 

@@ -24,8 +24,6 @@
 
 //! These are user defined include files
 //! Included in double quotes - the path to find these has to be given at compile time
-#include <iostream>
-#include <sys/time.h>
 #include "render.hpp"
 #include "cs296_base.hpp"
 #include "callbacks.hpp"
@@ -116,14 +114,13 @@ void create_glui_ui(void)
 //! This is the main function
 int main(int argc, char** argv)
 {
-  
   test_count = 1;
   test_index = 0;
   test_selection = test_index;
   
   entry = sim;
   test = entry->create_fcn();
-/*
+
   //! This initializes GLUT
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
@@ -150,58 +147,6 @@ int main(int argc, char** argv)
 
   //! Enter the infinite GLUT event loop
   glutMainLoop();
-
-*/
   
-  //recently changed for lab 05
-  //to get my world
-  b2World* myworld = test->get_world();
-  const b2Profile& myprofile = myworld->GetProfile();
-  float32 total_itr_time = 0.0f;
-  float32 total_col_up_time = 0.0f;
-  float32 total_pos_up_time = 0.0f;
-  float32 total_vel_up_time = 0.0f;
-  float32 mytime_step = settings_hz > 0.0f ? 1.0f / settings_hz : float32(0.0f);
-  float32 total_time =0.0f;
-
-
-//timestructs
-  timeval t1,t2;
-//  float32 t_sec = 0.0f;
-//  float32 t_usec = 0.0f;
-
-  int count=atoi(argv[1]);
-  //std::cin>>count;
-  //loop to calculate the time taken to do 100 steps
-  gettimeofday(&t1,NULL);
-  for (int i = 0; i < count; ++i)
-  {
-    myworld->Step(mytime_step, settings.velocity_iterations, settings.position_iterations);
-    total_itr_time+= myprofile.step;
-    total_col_up_time+= myprofile.collide;
-    total_pos_up_time+= myprofile.solvePosition;
-    total_vel_up_time+= myprofile.solveVelocity;
-  }
-  gettimeofday(&t2,NULL);
-
-//calculating the total time
-  total_time = (t2.tv_sec - t1.tv_sec)*1000  +  (float32)(t2.tv_usec - t1.tv_usec)/1000;
-
-  float32 avg_itr_time = total_itr_time/count;
-  float32 avg_col_up_time = total_col_up_time/count;
-  float32 avg_pos_up_time = total_pos_up_time/count;
-  float32 avg_vel_up_time = total_vel_up_time/count;
-
-//  printf("The average time for a %d iterations is: %0.5f ms\n",count,avg_itr_time );
-//  printf("This is from the source code branch made by Sanchit from Group 31 for CS296 Lab 04.\n");
-
-  printf("Total Iterations: %d\n",count);
-  printf("Average time per step is %f ms\n",avg_itr_time);
-  printf("Average time for collisions is %f ms\n",avg_col_up_time);
-  printf("Average time for velocity updates is %f ms\n",avg_vel_up_time);
-  printf("Average time for position updates is %f ms\n",avg_pos_up_time);
-  printf("Total time for loop is %f ms\n",total_time);
-
-  //upto this only
   return 0;
 }
