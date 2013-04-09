@@ -21,6 +21,9 @@ SRCDIR = $(PROJECT_ROOT)/src
 OBJDIR = $(PROJECT_ROOT)/obj
 BINDIR = $(PROJECT_ROOT)/bin
 DOCDIR = $(PROJECT_ROOT)/doc
+SCRIPTDIR = $(PROJECT_ROOT)/scripts
+DATADIR = $(PROJECT_ROOT)/data
+PLOTDIR = $(PROJECT_ROOT)/plots
 
 # Library Paths
 BOX2D_ROOT=$(EXTERNAL_ROOT)
@@ -96,9 +99,48 @@ doc:
 	@$(DOXYGEN) $(DOCDIR)/Doxyfile 2 > /dev/null
 	@$(ECHO) "Done"
 
+
+setup1:
+	@mkdir -p plots
+	@mkdir -p data
+
+gen_csv:
+	@$(ECHO) -n "Generating lab05_g31_data.csv File"
+	@chmod 777 $(SCRIPTDIR)/gen_data_csv.sh
+	@$(SCRIPTDIR)/gen_data_csv.sh
+
+
+plot:all setup1 gen_csv
+	@chmod 777 $(SCRIPTDIR)/*
+	@$(ECHO) -n "Generating Plot1..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper01.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot01.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot01.gpt
+	@$(ECHO) -n "Generating Plot2..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper02.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot02.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot02.gpt
+	@$(ECHO) -n "Generating Plot3..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper03.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot03.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot03.gpt
+	@$(ECHO) -n "Generating Plot4..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper04.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot04.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot04.gpt
+	@$(ECHO) -n "Generating Plot5..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper05.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot05.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot05.gpt
+	@$(ECHO) -n "Generating Plot6..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/helper06.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot06.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot06.gpt
+	rm -f $(DATADIR)/*.dat
+	@$(ECHO) -n "All Graphs are saved in plots folder"
+
+
+
+
+
 clean:
 	@$(ECHO) -n "Cleaning up..."
-	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~ $(BINDIR)
+	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~ $(DATADIR) $(PLOTDIR)
+	@$(RM) -rf $(BINDIR)
 	@$(RM) -rf doc/html
 	@$(ECHO) "Done"
 

@@ -1,0 +1,21 @@
+reset
+set datafile separator ","
+set title "Variation Frequency Plot of Step-Time for Iteration Value = 35"
+set xlabel "Variaton in Step-Time"
+set ylabel "No. of Observations"
+set y2label "Cumulative Observation"
+set y2tics autofreq
+set key title "TIME"
+bin(x, s) = s*int(x/s)
+bw = 0.04
+set boxwidth bw
+set style fill solid 0.4
+set yrange [0:*]
+set xrange [*:*]
+set term png
+out="plots/g31_plot06.png"
+set output out
+
+plot 'data/plot06.dat' u (bin($1,bw)+bw/2):(1) smooth frequency ti 'freq' w boxes,\
+	 'data/plot06.dat' u ($1):(1) smooth cumulative axes x1y2 ti 'cumulative' w lines linetype 3 lw 2
+

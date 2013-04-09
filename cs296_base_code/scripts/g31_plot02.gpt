@@ -1,0 +1,8 @@
+set datafile separator ","
+set xlabel "No. of Iterations"
+set ylabel "Time Averaged Over Reruns"
+set title "Plot showing the Time Averaged Over Reruns vs. Iteration Values"
+set key title "TIME"
+set term png
+set output "plots/g31_plot02.png"
+plot "data/plot02.dat" using 1:2 with lines linecolor rgb "green" title "Step Time","data/plot02.dat" using 1:3 with lines linecolor rgb "red" title "Collision Time","data/plot02.dat" using 1:4 with lines linecolor rgb "blue" title "Velocity Time","data/plot02.dat" using 1:5 with lines linecolor rgb "pink" title "Position Time"

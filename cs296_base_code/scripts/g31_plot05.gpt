@@ -1,0 +1,16 @@
+reset
+set term "png"
+set output "plots/g31_plot05.png"
+
+set datafile separator ','
+#add description to the graph
+set title "Step-Time with Error-Bars vs Iterations"
+set key title "TIME"
+set xlabel "No. of Iterations"
+set ylabel "Step-Time"
+
+out="plots/g31_plot05.png"
+set output out
+#the final plotting commands
+plot 'data/plot05.dat' with lines title 'step-time', \
+	 'data/plot05.dat' using 1:2:7  with errorbars title 'error'
