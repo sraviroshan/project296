@@ -25,6 +25,7 @@ SCRIPTDIR = $(PROJECT_ROOT)/scripts
 DATADIR = $(PROJECT_ROOT)/data
 PLOTDIR = $(PROJECT_ROOT)/plots
 BUILD2DDIR  = $(EXTERNAL_ROOT)/src
+PROJECT_ROOT_TAR=$(HOME)/project296
 
 # Library Paths
 BOX2D_ROOT=$(EXTERNAL_ROOT)
@@ -130,6 +131,16 @@ release_prof:clean $(BUILD2DDIR)/Box2D.tgz
 		@chmod 777 gprof2dot.py
 		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/rel_output200.png
 		@rm -f perf.*
+
+		
+dist:$(BUILD2DDIR)/Box2D.tgz
+	@cd $(BUILD2DDIR)  && rm -rf Box2D
+	@cd $(EXTERNAL_ROOT) && rm -rf include && rm -rf lib
+	@cd $(PROJECT_ROOT_TAR) && tar -cvf cs296_g31_project.tar.gz  cs296_base_code
+	@cd $(BUILD2DDIR) && tar -xvf Box2D.tgz 
+	@cd $(BUILD2DDIR)/Box2D && mkdir -p build296
+	@cd $(BUILD2DDIR)/Box2D/build296 && cmake ../ && make  && make install
+	
 
 
 datadir : 
