@@ -136,9 +136,15 @@ release_prof:clean $(BUILD2DDIR)/Box2D.tgz
 exe: myinstall  setup $(BINDIR)/$(TARGET)
 
 
-report:datadir $(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/deb_output200.png $(DOCDIR)/rel_output200.png
+
+
+report:$(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/deb_output200.png $(DOCDIR)/rel_output200.png $(PLOTDIR)/g31_plot01.png $(PLOTDIR)/g31_plot02.png $(PLOTDIR)/g31_plot03.png $(PLOTDIR)/g31_plot04.png $(PLOTDIR)/g31_plot05.png $(PLOTDIR)/g31_plot06.png
 	@pdflatex $(DOCDIR)/report.tex
-	@mv report.pdf $(DATADIR)/report.pdf
+	@bibtex $(PROJECT_ROOT)/report.aux
+	@pdflatex $(DOCDIR)/report.tex
+	@pdflatex $(DOCDIR)/report.tex
+	@pdflatex $(DOCDIR)/report.tex
+	@mv report.pdf $(DOCDIR)/report.pdf
 	@rm report.*
 
 		
@@ -196,15 +202,6 @@ plot:setup1 gen_csv
 	@gnuplot $(SCRIPTDIR)/g31_plot06.gpt
 	rm -f $(DATADIR)/*.dat
 	@$(ECHO) -n "All Graphs are saved in plots folder"
-
-report:$(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/deb_output200.png $(DOCDIR)/rel_output200.png $(PLOTDIR)/g31_plot01.png $(PLOTDIR)/g31_plot02.png $(PLOTDIR)/g31_plot03.png $(PLOTDIR)/g31_plot04.png $(PLOTDIR)/g31_plot05.png $(PLOTDIR)/g31_plot06.png
-	@pdflatex $(DOCDIR)/report.tex
-	@bibtex $(PROJECT_ROOT)/report.aux
-	@pdflatex $(DOCDIR)/report.tex
-	@pdflatex $(DOCDIR)/report.tex
-	@pdflatex $(DOCDIR)/report.tex
-	@mv report.pdf $(DOCDIR)/report.pdf
-	@rm report.*
 
 clean:
 	@$(ECHO) -n "Cleaning up..."
