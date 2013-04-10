@@ -123,7 +123,7 @@ int main(int argc, char** argv)
   
   entry = sim;
   test = entry->create_fcn();
-/*
+
   //! This initializes GLUT
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
   //! Enter the infinite GLUT event loop
   glutMainLoop();
 
-*/
+/*
   
   //recently changed for lab 05
   //to get my world
@@ -201,6 +201,7 @@ int main(int argc, char** argv)
   printf("Average time for position updates is %f ms\n",avg_pos_up_time);
   printf("Total time for loop is %f ms\n",total_time);
 
+*/
   //upto this only
   return 0;
 }

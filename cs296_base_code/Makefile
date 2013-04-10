@@ -75,7 +75,7 @@ setup:
 	@mkdir -p obj
 	@mkdir -p bin
 
-$(BINDIR)/$(TARGET): $(OBJS)
+$(BINDIR)/$(TARGET): myinstall $(OBJS)
 	@$(PRINTF) "$(MESG_COLOR)Building executable:$(NO_COLOR) $(FILE_COLOR) %16s$(NO_COLOR)" "$(notdir $@)"
 	@$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) 2> temp.log || touch temp.err
 	@if test -e temp.err; \
@@ -133,7 +133,7 @@ release_prof:clean $(BUILD2DDIR)/Box2D.tgz
 		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/rel_output200.png
 		@rm -f perf.*
 
-exe: all 
+exe: myinstall  setup $(BINDIR)/$(TARGET)
 
 
 report:datadir $(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/deb_output200.png $(DOCDIR)/rel_output200.png
@@ -147,8 +147,7 @@ dist:$(BUILD2DDIR)/Box2D.tgz
 	@cd $(BUILD2DDIR)  && rm -rf Box2D
 	@cd $(EXTERNAL_ROOT) && rm -rf include && rm -rf lib
 	@cd $(PROJECT_ROOT_TAR) && tar -zcvf cs296_g31_project.tar.gz  cs296_base_code
-	
-<<<<<<< HEAD
+
 myinstall:$(BUILD2DDIR)/Box2D.tgz
 		@cd $(BUILD2DDIR) && tar -xvf Box2D.tgz 
 		@cd $(BUILD2DDIR)/Box2D && mkdir -p build296
@@ -164,8 +163,6 @@ install: exe report
 		
 datadir : 
 	@mkdir -p data
-
-=======
 
 
 setup1:
@@ -208,8 +205,6 @@ report:$(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/de
 	@pdflatex $(DOCDIR)/report.tex
 	@mv report.pdf $(DOCDIR)/report.pdf
 	@rm report.*
-
->>>>>>> e636075001d77ba975950f55e14b0e8702194df7
 
 clean:
 	@$(ECHO) -n "Cleaning up..."
