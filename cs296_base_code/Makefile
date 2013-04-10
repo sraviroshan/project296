@@ -65,19 +65,20 @@ OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 .PHONY: all setup doc clean distclean
 
-all: $(PROJECT_ROOT)/external/lib/libBox2D.a setup $(BINDIR)/$(TARGET) report doc
+all: $(PROJECT_ROOT)/external/lib/libBox2D.a setup $(BINDIR)/$(TARGET)
 
 $(PROJECT_ROOT)/external/lib/libBox2D.a :
 	@cd external/src/; \
-	 tar -xvf Box2D.tgz; \
-	 cd Box2D; \
-	 mkdir build296; \
-	 cd build296; \
-	 cmake ../ && make && make install
+	tar -xvf Box2D.tgz; \
+	cd Box2D; \
+	mkdir build296; \
+	cd build296; \
+	cmake ../ && make && make install
 
 
 setup:
 	@$(ECHO) "Setting up compilation..."
+	@cp $(PROJECT_ROOT)/src/temp/main_sim.cpp $(PROJECT_ROOT)/src/main.cpp
 	@mkdir -p obj
 	@mkdir -p bin
 
@@ -120,9 +121,15 @@ plot:setupplot	 all
 	@cp $(SRCDIR)/temp/main_sim.cpp $(SRCDIR)/main.cpp
 
 		
-install:all
+install:all report doc
 	@mkdir -p $(INSTALL_PATH)
-	@cp -r bin doc plots scripts src $(INSTALL_PATH)/
+	@cd $(INSTALL_PATH) && mkdir -p doc 
+	@cp -r bin plots scripts $(INSTALL_PATH)/
+	@cp -r bin $(INSTALL_PATH)/
+	@cp -r $(DOCDIR)/html $(INSTALL_PATH)/doc/
+	@cp $(DOCDIR)/report.pdf $(INSTALL_PATH)/doc/
+	@cp $(DOCDIR)/*.png $(INSTALL_PATH)/doc/
+	@cp $(DOCDIR)/g31_lab09_report.html $(INSTALL_PATH)/doc/
 		
 doc:
 	@$(ECHO) -n "Generating Doxygen Documentation ...  "
@@ -153,6 +160,7 @@ clean:
 	@$(RM) -rf $(BINDIR)
 	@$(RM) -rf doc/html
 	@$(RM) -f doc/report.pdf
+	@$(RM) -f doc/g31_lab09_report.html
 	@$(ECHO) "Done"
 
 distclean: clean
