@@ -1,6 +1,26 @@
 @charset "utf-8";
 /* CSS Document */
 
+
+.olddesign {
+	position:absolute;
+	left:1000px;
+	top:150px;
+}
+#olddesign{
+	left:400px;
+	width:200px;
+}
+.table_oldDisign{
+	/*background-color:#623274;*/
+	color:#800080;
+	/*border-radius:5px;*/
+	font-size:24px;
+	cursor:pointer;
+	padding:3px;
+	text-align:center;
+}
+
 .welcome1 {
 	position:absolute;
 	left:700px;
