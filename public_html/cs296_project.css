@@ -11,8 +11,26 @@
 	left:400px;
 	width:200px;
 }
+.newdesign {
+	position:absolute;
+	left:350px;
+	top:150px;
+}
+#newdesign{
+	left:400px;
+	width:200px;
+}
+.reporthtml {
+	position:absolute;
+	left:600px;
+	top:150px;
+}
+#reporthtml{
+	left:400px;
+	width:200px;
+}
 .table_oldDisign{
-	/*background-color:#623274;*/
+	background-color:#44A881;
 	color:#800080;
 	/*border-radius:5px;*/
 	font-size:24px;
@@ -70,7 +88,7 @@
 	
 }
 .table_content{
-	background-color:#623274;
+	background-color:#44A881;
 	color:#CCC;
 	/*border-radius:5px;*/
 	width:200px;
