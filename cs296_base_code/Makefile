@@ -132,12 +132,45 @@ release_prof:clean $(BUILD2DDIR)/Box2D.tgz
 		@rm -f perf.*
 
 
-datadir : 
+setup1:
+	@mkdir -p plots
 	@mkdir -p data
 
-report:datadir $(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/deb_output200.png $(DOCDIR)/rel_output200.png
+gen_csv:all
+	@$(ECHO) -n "Generating lab05_g31_data.csv File"
+	@chmod 777 $(SCRIPTDIR)/gen_data_csv.sh
+	@$(SCRIPTDIR)/gen_data_csv.sh
+	
+plot:setup1 gen_csv
+	@chmod 777 $(SCRIPTDIR)/*
+	@$(ECHO) -n "Generating Plot1..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot01.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot01.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot01.gpt
+	@$(ECHO) -n "Generating Plot2..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot02.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot02.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot02.gpt
+	@$(ECHO) -n "Generating Plot3..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot03.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot03.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot03.gpt
+	@$(ECHO) -n "Generating Plot4..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot04.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot04.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot04.gpt
+	@$(ECHO) -n "Generating Plot5..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot05.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot05.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot05.gpt
+	@$(ECHO) -n "Generating Plot6..."
+	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot06.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot06.dat
+	@gnuplot $(SCRIPTDIR)/g31_plot06.gpt
+	rm -f $(DATADIR)/*.dat
+	@$(ECHO) -n "All Graphs are saved in plots folder"
+
+report:$(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/deb_output200.png $(DOCDIR)/rel_output200.png $(PLOTDIR)/g31_plot01.png $(PLOTDIR)/g31_plot02.png $(PLOTDIR)/g31_plot03.png $(PLOTDIR)/g31_plot04.png $(PLOTDIR)/g31_plot05.png $(PLOTDIR)/g31_plot06.png
 	@pdflatex $(DOCDIR)/report.tex
-	@mv report.pdf $(DATADIR)/report.pdf
+	@bibtex $(PROJECT_ROOT)/report.aux
+	@pdflatex $(DOCDIR)/report.tex
+	@pdflatex $(DOCDIR)/report.tex
+	@pdflatex $(DOCDIR)/report.tex
+	@mv report.pdf $(DOCDIR)/report.pdf
 	@rm report.*
 
 
