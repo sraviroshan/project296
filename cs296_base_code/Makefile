@@ -27,6 +27,7 @@ PLOTDIR = $(PROJECT_ROOT)/plots
 BUILD2DDIR  = $(EXTERNAL_ROOT)/src
 PROJECT_ROOT_TAR=$(HOME)/project296
 
+
 # Library Paths
 BOX2D_ROOT=$(EXTERNAL_ROOT)
 GLUI_ROOT=/usr
@@ -65,7 +66,7 @@ INCS := $(wildcard $(SRCDIR)/*.hpp)
 OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
-.PHONY: all setup doc clean distclean
+.PHONY: all setup dist install doc clean distclean
 
 all: setup $(BINDIR)/$(TARGET)
 
@@ -132,24 +133,36 @@ release_prof:clean $(BUILD2DDIR)/Box2D.tgz
 		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/rel_output200.png
 		@rm -f perf.*
 
-		
-dist:$(BUILD2DDIR)/Box2D.tgz
-	@cd $(BUILD2DDIR)  && rm -rf Box2D
-	@cd $(EXTERNAL_ROOT) && rm -rf include && rm -rf lib
-	@cd $(PROJECT_ROOT_TAR) && tar -cvf cs296_g31_project.tar.gz  cs296_base_code
-	@cd $(BUILD2DDIR) && tar -xvf Box2D.tgz 
-	@cd $(BUILD2DDIR)/Box2D && mkdir -p build296
-	@cd $(BUILD2DDIR)/Box2D/build296 && cmake ../ && make  && make install
-	
+exe: all 
 
-
-datadir : 
-	@mkdir -p data
 
 report:datadir $(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/deb_output200.png $(DOCDIR)/rel_output200.png
 	@pdflatex $(DOCDIR)/report.tex
 	@mv report.pdf $(DATADIR)/report.pdf
 	@rm report.*
+
+		
+dist:$(BUILD2DDIR)/Box2D.tgz
+	@cd $(PROJECT_ROOT) && rm -rf obj && rm -rf bin
+	@cd $(BUILD2DDIR)  && rm -rf Box2D
+	@cd $(EXTERNAL_ROOT) && rm -rf include && rm -rf lib
+	@cd $(PROJECT_ROOT_TAR) && tar -zcvf cs296_g31_project.tar.gz  cs296_base_code
+	
+myinstall:$(BUILD2DDIR)/Box2D.tgz
+		@cd $(BUILD2DDIR) && tar -xvf Box2D.tgz 
+		@cd $(BUILD2DDIR)/Box2D && mkdir -p build296
+		@cd $(BUILD2DDIR)/Box2D/build296 && cmake  ../ && make  && make install
+		
+install: exe report 
+		@$ rm -rf ../install
+		@$ mkdir ../install
+		@$ mkdir ../install/doc
+		@$ cp -r bin/ ../install/
+		@$ cp ./doc/profiling_report.html ./doc/g31_prof_report.pdf ../install/doc/
+		
+		
+datadir : 
+	@mkdir -p data
 
 
 clean:
@@ -161,3 +174,7 @@ clean:
 
 distclean: clean
 	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
+	@cd $(PROJECT_ROOT) && rm -rf obj && rm -rf bin
+	@cd $(BUILD2DDIR)  && rm -rf Box2D
+	@cd $(EXTERNAL_ROOT) && rm -rf include && rm -rf lib
+	
