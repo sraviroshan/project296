@@ -21,7 +21,7 @@
 
 
 \section{Introduction}
-A Rube Goldberg machine, contraption, invention, device, or apparatus is a deliberately over-engineered or overdone machine that performs a very simple task in a very complex fashion, usually including a chain reaction. The expression is named after American cartoonist and inventor Rube Goldberg (1883–1970). ~\cite{wiki}%////Wikipedia
+A Rube Goldberg machine, contraption, invention, device, or apparatus is a deliberately over-engineered or overdone machine that performs a very simple task in a very complex fashion, usually including a chain reaction. The expression is named after American cartoonist and inventor Rube Goldberg (1883–1970). ~\cite{wiki}
 
 This is a small Project Report about the simulation and contraption using C++ Simulator engine Box2D under the CS296 Lab Course.
 
@@ -30,7 +30,7 @@ Here we first describe the design of the simulation followed by its timing and P
 \section{Design}
 First we start with implemented design. Design is very simple. Implemented and original design are almost same. We then describe some minor changes we have done in original design.~\cite{lt}
 \subsection{Implemented Design}	
-
+Here is the image of implemented design.
 \begin{center}
 \includegraphics[scale=0.3]{./doc/photo1.png}
 \begin{center}
@@ -50,7 +50,7 @@ Fig.2
 \end{center}
 \end{center}
 
-\begin{itemize}
+\begin{enumerate}
 \item {Motored Plank}
 \begin{description} Instead of motored plank We thought of a revolving ball which is in contact with a plank. As ball rotates plank moves and hit a ball and continue.
 \end{description}
@@ -62,10 +62,11 @@ Fig.2
 \item{Bursting of Balloon}
 \begin{description} We thought that as the balloon rise it would come into the contact of a pointed thing and will burst.
 \end{description}
-\end{itemize}
+\end{enumerate}
 
 \subsection{Interesting Features}
-\begin{itemize}
+Interesting features are:
+\begin{enumerate}
 \item {Newton's Cradle}
 \begin{description} Newtons Cradle may look like interesting but in simulation the exact effect of it has not achieved i.e only end balls move.
 \end{description}
@@ -73,15 +74,14 @@ Fig.2
 \item {Rising Balloon}
 \begin{description} Rising Balloon (acieved by reversing its gravity) may look like interesting.
 \end{description}
-\end{itemize}
+\end{enumerate}
 
 
 \section{Timing Analysis}
-
+Timing Analysis is as follows:
 \subsection{Observations}
-
+Following are the observations while doing timing analysis.
 \begin{enumerate}
-
 \item{Plot1: Loop time increases with no of iterations.}
 \begin{description}
 It is obvious. As no. of iterations increases the time taken to simulate more steps increases.
@@ -89,7 +89,7 @@ It is obvious. As no. of iterations increases the time taken to simulate more st
 
 
 \begin{center}
-\includegraphics[scale=0.3]{./plots/g31_plot01.png}
+\includegraphics[scale=0.5]{./plots/g31_lab09_plot01.png}
 \begin{center}
 Fig.3 Plot01 : step and loop time averaged over all reruns for various iteration values
 \end{center}
@@ -109,7 +109,7 @@ We have run for iteration no. 5000,10000 and observed the avg. step time decreas
 \end{description}
 
 \begin{center}
-\includegraphics[scale=0.3]{./plots/g31_plot02.png}
+\includegraphics[scale=0.5]{./plots/g31_lab09_plot02.png}
 \begin{center}
 Fig.4 Plot02 : step,collision,position and velocity update time averaged over all reruns for various iteration values
 \end{center}
@@ -121,13 +121,13 @@ It may be possible that as simulation proceeds ahead the simulation steps are pe
 \end{description}
 
 \begin{center}
-\includegraphics[scale=0.3]{./plots/g31_plot03.png}
+\includegraphics[scale=0.5]{./plots/g31_lab09_plot03.png}
 \begin{center}
 Fig.5 Plot03 : step and loop time averaged over all iterations for various rerun values
-\end{center}  \and
+\end{center} 
 
 
-\includegraphics[scale=0.3]{./plots/g31_plot04.png}
+\includegraphics[scale=0.5]{./plots/g31_lab09_plot04.png}
 \begin{center}
 Fig.6 Plot04 : step,collision,position and velocity update time averaged over all iterations for various rerun values
 \end{center}
@@ -140,7 +140,7 @@ As more and more programs run on machine, the process of memory and other resour
 
 
 \begin{center}
-\includegraphics[scale=0.3]{./plots/g31_plot05.png}
+\includegraphics[scale=0.5]{./plots/g31_lab09_plot05.png}
 \begin{center}
 Fig.7 Plot05 : step time for various iteration values with error bars
 \end{center}
@@ -158,7 +158,7 @@ As no. of datasets increases in a sample, error(Standard Deviation) decreases. T
 
 
 \begin{center}
-\includegraphics[scale=0.3]{./plots/g31_plot06.png}
+\includegraphics[scale=0.5]{./plots/g31_lab09_plot06.png}
 \begin{center}
 Fig.8 Plot06 : frequency values as a bar graph and the cumulative frequency values as a curve
 \end{center}
@@ -175,8 +175,8 @@ As in plot2 we saw that no. of low averaged value is more than high averaged val
 A profiler is used to identify what are the parts of your code are taking the maximum time. This helps in identifying parts of your code that can be optimized. Here below is the profiling done first with optimization i.e with release mode on and second with debugging mode on. For profiling we have used perf tool.
 
 \subsection{Observations}
-Analysis has beem done on the iteration no. 200, 1000 and 5000.
-\begin{itemize}
+Analysis has been done on the iteration no. 200, 1000 and 5000.
+\begin{enumerate}
 \item{For Iteration no. 200}
 \begin{description} In debug mode maximum time is taken by "b2ContactSolver::SolveVelocityConstraints()" approx. 19.55\% while in release mode maximum time is taken by "b2World::Step(float, int, int)" approx. 11.13\% but next is "b2ContactSolver::SolveVelocityConstraints()" approx. 9.15\%.
 \end{description}
@@ -189,31 +189,39 @@ Analysis has beem done on the iteration no. 200, 1000 and 5000.
 \begin{description} In both mode maximum time is taken by "b2ContactSolver::SolveVelocityConstraints()" approx. 6.33\% in debug mode and 18.20\% in release mode.
 \end{description}
 
-\end{itemize}
+\end{enumerate}
 
 \subsection{Call Graphs}
-The call graph shows how much time was spent in each function and it’s children. Here is the call grpahs for both release and debug mode for iteration no. 200. We can see clearly the complexity of the running the simulation in both the cases.
-
+The call graph shows how much time was spent in each function and its children. Here is the call grpahs for both release and debug mode for iteration no. 200. We can see clearly the complexity of the running the simulation in both the cases. There are two call graphs.
+\begin{enumerate}
+\item{Debug Profile}
+\begin{description} Debug Call graph is more complex.
 \begin{center}
 \includegraphics[scale=0.1]{./doc/deb_output200.png}
 \begin{center}
 Fig.9 : Call Graph for Debug Mode:Itr value 200
 \end{center}
 \end{center}
+\end{description}
 
+\item{Release Profile}
+\begin{description} Release Call graph is more simple.
 \begin{center}
 \includegraphics[scale=0.1]{./doc/rel_output200.png}
 \begin{center}
 Fig.10 : Call Graph for Release Mode:Itr value 200
 \end{center}
 \end{center}
+\end{description}
+
+\end{enumerate}
 
 \subsection{Conclusion}
-\begin{itemize}
+\begin{enumerate}
 \item{We can see that number of functions calls for constructors are reduced drastically in the release part as compared to debug part and hence indicates that optimization ﬂags work on constructors.}
 
 \item{Here is a consistent observation. Most of the time is taken by method "b2ContactSolver::SolveVelocityConstraints()". Hence there is a possiblity of implementation optimization of this function in Box2D Library.}
-\end{itemize}
+\end{enumerate}
 
 \section{Conclusion}
 Thus in the report we have analyzed and timed the code under different conditions and summerized the results.

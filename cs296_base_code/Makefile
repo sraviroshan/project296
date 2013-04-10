@@ -15,7 +15,7 @@ DOXYGEN = doxygen
 TARGET = cs296_base
 
 # Project Paths
-PROJECT_ROOT=$(HOME)/project296/cs296_base_code
+PROJECT_ROOT=.
 EXTERNAL_ROOT=$(PROJECT_ROOT)/external
 SRCDIR = $(PROJECT_ROOT)/src
 OBJDIR = $(PROJECT_ROOT)/obj
@@ -25,7 +25,7 @@ SCRIPTDIR = $(PROJECT_ROOT)/scripts
 DATADIR = $(PROJECT_ROOT)/data
 PLOTDIR = $(PROJECT_ROOT)/plots
 BUILD2DDIR  = $(EXTERNAL_ROOT)/src
-PROJECT_ROOT_TAR=$(HOME)/project296
+INSTALL_PATH = $(PROJECT_ROOT)/install
 
 
 # Library Paths
@@ -37,10 +37,7 @@ GL_ROOT=/usr
 LIBS = -lBox2D -lglui -lglut -lGLU -lGL
 
 # Compiler and Linker flags
-cxxflags.debug := -g -Wall
-cxxflags.release := -g -O3 -Wall
-CPPFLAGS = ${cxxflags.${BUILD_MYflag}}
-#CPPFLAGS =-g -O3 -Wall 
+CPPFLAGS =-g -O3 -Wall 
 CPPFLAGS+=-I $(BOX2D_ROOT)/include -I $(GLUI_ROOT)/include
 LDFLAGS+=-L $(BOX2D_ROOT)/lib -L $(GLUI_ROOT)/lib
 
@@ -66,16 +63,26 @@ INCS := $(wildcard $(SRCDIR)/*.hpp)
 OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
-.PHONY: all setup dist install doc clean distclean
+.PHONY: all setup doc clean distclean
 
-all: setup $(BINDIR)/$(TARGET)
+all: $(PROJECT_ROOT)/external/lib/libBox2D.a setup $(BINDIR)/$(TARGET) report doc
+
+$(PROJECT_ROOT)/external/lib/libBox2D.a :
+	@cd external/src/; \
+	 tar -xvf Box2D.tgz; \
+	 cd Box2D; \
+	 mkdir build296; \
+	 cd build296; \
+	 cmake ../ && make && make install
+
 
 setup:
 	@$(ECHO) "Setting up compilation..."
 	@mkdir -p obj
 	@mkdir -p bin
 
-$(BINDIR)/$(TARGET): myinstall $(OBJS)
+
+$(BINDIR)/$(TARGET): $(OBJS)
 	@$(PRINTF) "$(MESG_COLOR)Building executable:$(NO_COLOR) $(FILE_COLOR) %16s$(NO_COLOR)" "$(notdir $@)"
 	@$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) 2> temp.log || touch temp.err
 	@if test -e temp.err; \
@@ -99,6 +106,24 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	fi;
 	@$(RM) -f temp.log temp.err
 
+
+setupplot:
+	@rm $(SRCDIR)/main.cpp
+	@cp $(SRCDIR)/temp/main_plot.cpp $(SRCDIR)/main.cpp
+	@mkdir -p data
+	@mkdir -p plots
+
+plot:setupplot	 all 
+	@python3 ./scripts/g31_gen_csv.py
+	@mv lab09_g31_data.csv ./data/
+	@python3 ./scripts/g31_gen_plots.py
+	@cp $(SRCDIR)/temp/main_sim.cpp $(SRCDIR)/main.cpp
+
+		
+install:all
+	@mkdir -p $(INSTALL_PATH)
+	@cp -r bin doc plots scripts src $(INSTALL_PATH)/
+		
 doc:
 	@$(ECHO) -n "Generating Doxygen Documentation ...  "
 	@$(RM) -rf doc/html
@@ -106,93 +131,8 @@ doc:
 	@$(ECHO) "Done"
 
 
-debug_prof:clean $(BUILD2DDIR)/Box2D.tgz
-	BUILD_MYflag=debug
-		@cd $(BUILD2DDIR) && rm -rf Box2D
-		@cd $(BUILD2DDIR) && tar -xvf Box2D.tgz 
-		@cd $(BUILD2DDIR)/Box2D && mkdir -p build296
-		@cd $(BUILD2DDIR)/Box2D/build296 && cmake -DCMAKE_BUILD_TYPE=Debug ../ && make  && make install
-		@make
-		@mkdir -p data
-		@perf record -g ./bin/cs296_base 200
-		@chmod 777 gprof2dot.py
-		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/deb_output200.png
-		@rm -f perf.*
-		
-		
-release_prof:clean $(BUILD2DDIR)/Box2D.tgz
-	BUILD_MYflag=release
-		@cd $(BUILD2DDIR) && rm -rf Box2D
-		@cd $(BUILD2DDIR) && tar -xvf Box2D.tgz 
-		@cd $(BUILD2DDIR)/Box2D && mkdir -p build296
-		@cd $(BUILD2DDIR)/Box2D/build296 && cmake -DCMAKE_BUILD_TYPE=Release ../ && make  && make install
-		@make
-		@mkdir -p data
-		@perf record -g ./bin/cs296_base 200
-		@chmod 777 gprof2dot.py
-		@perf script | ./gprof2dot.py -f perf | dot -Tpng -o ./data/rel_output200.png
-		@rm -f perf.*
-
-exe: myinstall  setup $(BINDIR)/$(TARGET)
-
-
-		
-dist:$(BUILD2DDIR)/Box2D.tgz
-	@cd $(PROJECT_ROOT) && rm -rf obj && rm -rf bin
-	@cd $(BUILD2DDIR)  && rm -rf Box2D
-	@cd $(EXTERNAL_ROOT) && rm -rf include && rm -rf lib
-	@cd $(PROJECT_ROOT_TAR) && tar -zcvf cs296_g31_project.tar.gz  cs296_base_code
-
-myinstall:$(BUILD2DDIR)/Box2D.tgz
-		@cd $(BUILD2DDIR) && tar -xvf Box2D.tgz 
-		@cd $(BUILD2DDIR)/Box2D && mkdir -p build296
-		@cd $(BUILD2DDIR)/Box2D/build296 && cmake  ../ && make  && make install
-		
-install: exe report 
-		@$ rm -rf ../install
-		@$ mkdir ../install
-		@$ mkdir ../install/doc
-		@$ cp -r bin/ ../install/
-		@$ cp ./doc/profiling_report.html ./doc/g31_prof_report.pdf ../install/doc/
-		
-		
-datadir : 
+report:
 	@mkdir -p data
-
-
-setup1:
-	@mkdir -p plots
-	@mkdir -p data
-
-gen_csv:all
-	@$(ECHO) -n "Generating lab05_g31_data.csv File"
-	@chmod 777 $(SCRIPTDIR)/gen_data_csv.sh
-	@$(SCRIPTDIR)/gen_data_csv.sh
-	
-plot:setup1 gen_csv
-	@chmod 777 $(SCRIPTDIR)/*
-	@$(ECHO) -n "Generating Plot1..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot01.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot01.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot01.gpt
-	@$(ECHO) -n "Generating Plot2..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot02.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot02.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot02.gpt
-	@$(ECHO) -n "Generating Plot3..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot03.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot03.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot03.gpt
-	@$(ECHO) -n "Generating Plot4..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot04.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot04.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot04.gpt
-	@$(ECHO) -n "Generating Plot5..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot05.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot05.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot05.gpt
-	@$(ECHO) -n "Generating Plot6..."
-	@awk -F "\"*,\"*" -f $(SCRIPTDIR)/g31_plot06.awk $(DATADIR)/lab05_g31_data.csv > $(DATADIR)/plot06.dat
-	@gnuplot $(SCRIPTDIR)/g31_plot06.gpt
-	rm -f $(DATADIR)/*.dat
-	@$(ECHO) -n "All Graphs are saved in plots folder"
-
-report:$(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/deb_output200.png $(DOCDIR)/rel_output200.png $(PLOTDIR)/g31_plot01.png $(PLOTDIR)/g31_plot02.png $(PLOTDIR)/g31_plot03.png $(PLOTDIR)/g31_plot04.png $(PLOTDIR)/g31_plot05.png $(PLOTDIR)/g31_plot06.png
 	@pdflatex $(DOCDIR)/report.tex
 	@bibtex $(PROJECT_ROOT)/report.aux
 	@pdflatex $(DOCDIR)/report.tex
@@ -200,12 +140,19 @@ report:$(DOCDIR)/report.tex $(DOCDIR)/photo1.png $(DOCDIR)/idea.png $(DOCDIR)/de
 	@pdflatex $(DOCDIR)/report.tex
 	@mv report.pdf $(DOCDIR)/report.pdf
 	@rm report.*
+	@python3 $(SCRIPTDIR)/g31_gen_html.py > ./doc/g31_lab09_report.html
+	
+
+
+dist:distclean $(BUILD2DDIR)/Box2D.tgz
+	@cd $(PROJECT_ROOT)/.. && tar -zcvf cs296_g31_project.tar.gz  cs296_base_code
 
 clean:
 	@$(ECHO) -n "Cleaning up..."
 	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~ $(DATADIR)
 	@$(RM) -rf $(BINDIR)
 	@$(RM) -rf doc/html
+	@$(RM) -f doc/report.pdf
 	@$(ECHO) "Done"
 
 distclean: clean
